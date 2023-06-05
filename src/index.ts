@@ -11,14 +11,16 @@ export type Money = {
   logAmount : () => string;
 };
 
-const EXCHANGE = [
+type Conversion = Array<{from : Currency, to : Currency, rate : number}>;
+
+const EXCHANGE : Conversion = [
   {"from": "EUR" , "to" : "USD" , "rate" : 1.2     },
   {"from": "USD" , "to" : "EUR" , "rate" : 0.82    },
   {"from": "USD" , "to" : "KRW" , "rate" : 1100    },
   {"from": "KRW" , "to" : "USD" , "rate" : 0.0009  },
   {"from": "EUR" , "to" : "KRW" , "rate" : 1344    },
   {"from": "KRW" , "to" : "EUR" , "rate" : 0.00073 }  
-]
+] ;
 
 export function createMoney (amount: number, currency : Currency) : Money {
 
@@ -26,8 +28,8 @@ export function createMoney (amount: number, currency : Currency) : Money {
 
   const exchange = (toCurrency : Currency) => {
     if (toCurrency === currency) return createMoney(amount, currency);
-    const exchangeRate = EXCHANGE.find(({from, to}) => from === currency && to === toCurrency)?.rate as number;
-    return createMoney(amount * exchangeRate , toCurrency);
+    const exchangeRate = EXCHANGE.find(({from, to}) => from === currency && to === toCurrency)?.rate;
+    return createMoney(amount * ( exchangeRate || 0) , toCurrency);
   }
 
   const add = (money: Money) => {
