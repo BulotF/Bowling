@@ -24,7 +24,6 @@ const EXCHANGE : Conversion = [
 
 export function createMoney (amount: number, currency : Currency) : Money {
 
-  const multiply = (quantity: number) => createMoney (amount * quantity , currency);
 
   const exchange = (toCurrency : Currency) => {
     if (toCurrency === currency) return createMoney(amount, currency);
@@ -32,20 +31,18 @@ export function createMoney (amount: number, currency : Currency) : Money {
     return createMoney(amount * ( exchangeRate || 0) , toCurrency);
   }
 
-  const add = (money: Money) => {
-    return createMoney(amount + money.exchange(currency).amount , currency)
-  }
-
-  return {
-    amount : amount,
-    currency: currency,
-    multiply: multiply,
-    divide: (quantity: number) => multiply(1 / quantity),
-    add: add,
-    exchange: exchange,
-    toEqual: (money: Money) =>
+  cosnt thisMoney: Money = {
+    amount,
+    currency,
+    "multiply": quantity => createMoney (amount * quantity , currency),
+    "divide": quantity => money.multiply(1 / quantity),
+    "add": money => createMoney(thisMoney.amount + money.exchange(currency).amount , currency),
+    exchange,
+    "toEqual": (money) =>
     money.amount === amount && money.currency === currency,
-    logAmount : () =>`${amount} ${currency}`
+    "logAmount" : () =>`${amount} ${currency}`
   }
+  
+  retrun money;
 
 }
