@@ -1,10 +1,13 @@
 type Game = {
-  lancer: (int: number) => void;
-  score: number;
+  lancer: (i: number) => void;
+  getScore: () => number;
 };
 export function createGame(): Game {
+  let quillesTotales = 0;
   return {
-    lancer: (int: number) => {},
-    score: 0,
+    lancer: (i: number) => {
+      quillesTotales += i;
+    },
+    getScore: () => quillesTotales,
   };
 }
